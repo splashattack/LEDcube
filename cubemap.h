@@ -1,16 +1,20 @@
-//#include <Arduino.h>
+#ifndef CUBEMAP_H
+#define CUBEMAP_H
+
 #include <bitset>
+//#include <Arduino.h>
 
-const char LAYERS = 4;
-
-class cubemap {
-  std::bitset<16> frame[LAYERS];
+class cubemap
+{
+private:
+    //std::bitset<16> frame[LAYERS];
+    std::bitset<16> foo;
+    std::bitset<16> bar (0xfa2);
+    std::bitset<16> baz (std::string("0101111001"));;
 
 public:
-  updateLayer(bitset& pattern)
-  {
-    frame[pattern[0]] = pattern.to_ulong & 0xFFFF;
-  }
+    void updateLayer(const bitset& pattern) const;
 };
 
 
+#endif
