@@ -15,6 +15,6 @@ void cubemap::updateLayer(const unsigned long& input_bits)
     }
     else
     {
-        frame[select] = pattern;
+        frame[select - 1] = pattern;
     }
 }
