@@ -1,11 +1,6 @@
-#include "cubemap.h"
+#include "cubemem.h"
 
-// cubemap::cubemap()
-// {
-    
-// }
-
-void cubemap::updateLayer(const unsigned long& input_bits)
+void cubemem::update_layer(const unsigned long& input_bits)
 {
     byte select = (byte) (input_bits & 0xFFFF0000) >> 16;
     unsigned int pattern = input_bits & 0xFFFF;
@@ -15,6 +10,11 @@ void cubemap::updateLayer(const unsigned long& input_bits)
     }
     else
     {
-        frame[select - 1] = pattern;
+        _frame[select - 1] = pattern;
     }
+}
+
+cubemem::cubemem(byte layers)
+{
+    
 }
