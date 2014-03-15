@@ -9,11 +9,16 @@ class cubemem
 public:
     void update_layer(const unsigned long& pattern);
 
-    cubemem(byte layers);
+    // cubemem(byte layers);
 
 private:
-    byte _layers;
-    unsigned long _frame[];
+    // Number of layers in the cube.
+    static const byte _LAYERS = 4;
+
+    // The cube's memory, holds the patterns on each layer.
+    unsigned long _frame[_LAYERS];
+
+    cubemem();
 
 };
 

@@ -14,7 +14,17 @@ void cubemem::update_layer(const unsigned long& input_bits)
     }
 }
 
-cubemem::cubemem(byte layers)
+// cubemem::cubemem(byte layers)
+//     : _layers(layers),
+// {
+//     for 
+//     _frame = {0};
+// }
+
+cubemem::cubemem()
 {
-    
+    for (int i = _LAYERS; i > 0; i--)
+    {
+        update_layer(i << 16);
+    }
 }
