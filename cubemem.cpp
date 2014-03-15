@@ -21,6 +21,8 @@ void cubemem::update_layer(const unsigned long& input_bits)
 //     _frame = {0};
 // }
 
+// A future constructor may initialize the cube with a frame from non-volatile memory.
+
 cubemem::cubemem()
 {
     for (int i = _LAYERS; i > 0; i--)
