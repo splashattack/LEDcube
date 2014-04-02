@@ -4,28 +4,45 @@
 #include <bitset>
 
 const int dataPin = 10, latchPin = 11, clockPin = 12;
-const int level[] = {7, 6, 5, 4}; //level select pins
+const int layer_pins[] = {7, 6, 5, 4}; //level select pins
 
 
 //This is a 2 demensional array that maps out all of the output locations to the correct output
 //address on the shift register based on the circuit wiring.
 //
 // Each entry corresponds to the binary string to light said specific LED column.
-const int positions[4][4] = { 
-  {32, 128, 8192, 32768},
-  {4, 1, 1024, 256},
-  {16, 64, 4096, 16384},
-  {8, 2, 2048, 512} 
-};
+//  [32, 128, 8192, 32768]
+//  [4, 1, 1024, 256]
+//  [16, 64, 4096, 16384]
+//  [8, 2, 2048, 512]
 
 
+const int positions[16] = { 32, 128, 8192, 32768, 4, 1, 1024, 256, 16, 64, 4096, 16384, 8, 2, 2048, 512};
 
+cubemap my_cube;
+
+unsigned int mapLayer(unsigned int layer)
+{
+  const byte COUNT = 15;
+  unsigned int mapped_layer = 0;
+  byte _position = 0;
+  for (int i = COUNT; i >= 0; i--)
+  {
+    _position = (layer & (1 << i)) >> i;
+    if (_position)
+    {
+      mapped_layer |= positions[COUNT - i];
+    }
+  }
+  return mapped_layer;
+}
+
+const char* test_patterns[4] = {"10010010100111011", "20010010100111011", "30010010100111011", "40010010100111011"};
 
 void setup()
 {
   Serial.begin(9600);
-  int last_k = 0;//variable used in ISR
-  
+
   //INTERRUPT SETUP
   
   // Source:
@@ -56,53 +73,52 @@ void setup()
   pinMode(latchPin,OUTPUT);//Green wire (D11)
   pinMode(clockPin,OUTPUT);//Yellow wire (D12)
   
-  pinMode(level[0],OUTPUT);//Orange wire (D7)
-  pinMode(level[1],OUTPUT);//Brown wire (D6)
-  pinMode(level[2],OUTPUT);//Purple wire wire (D5)
-  pinMode(level[3],OUTPUT);//White wire (D4)
+  pinMode(layer_pins[0],OUTPUT);//Orange wire (D7)
+  pinMode(layer_pins[1],OUTPUT);//Brown wire (D6)
+  pinMode(layer_pins[2],OUTPUT);//Purple wire wire (D5)
+  pinMode(layer_pins[3],OUTPUT);//White wire (D4)
+  
+  for (int i = 0; i < 4; i++)
+    my_cube.inputLayer(test_patterns[i]);
 }
 
-
+int k = 0;
 
 //This ISR pulls the data for the current state of the cube and manipuilates it, and displays the correct pattern
 //on the cube itself. Basically, this is where all the dirty work happens.
 
 ISR(TIMER1_COMPA_vect)
 {
-  int last_k=0;
-  for(int k=0; k<4; k++)
-    {
-       //freeze cube
-       digitalWrite(latchPin, LOW);
-       
-       //pull data from the matrix
-       std::bitset<16> input = cubemap.frame[k];
-       //translate data
-       
-       //push data to cube
-       shiftOut(dataPin, clockPin, MSBFIRST, highByte(input));
-       shiftOut(dataPin, clockPin, MSBFIRST, lowByte(input));
-       
-       //Turn off previous layer
-       digitalWrite(level[last_k],LOW);
-       
-       //Display new pattern
-       digitalWrite(latchPin, HIGH);
-       //Turn on the current layer
-       digitalWrite(level[k],HIGH);
+   //freeze cube
+   digitalWrite(latchPin, LOW);
+   
+   //pull data from the matrix
+   unsigned int input = mapLayer(my_cube.getLayer(k));
+   //translate data
+   
+   //push data to cube
+   shiftOut(dataPin, clockPin, MSBFIRST, highByte(input));
+   shiftOut(dataPin, clockPin, MSBFIRST, lowByte(input));
+   
+   //Turn off previous layer
+   digitalWrite(layer_pins[(k - 1) % 4], LOW);
+   
+   //Display new pattern
+   digitalWrite(latchPin, HIGH);
+   //Turn on the current layer
+   digitalWrite(layer_pins[k],HIGH);
 
-    //Store this layer for use in next iteration of loop
-    last_k = k;
-    
-    }
-  
+  //Store this layer for use in next iteration of loop
+   k = (k + 1) % 4;
 }
- 
+
+
+
+//
 
 
 void loop()
 {
-    //
 }
  
 

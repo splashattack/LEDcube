@@ -1,17 +1,17 @@
-//#include <Arduino.h>
-#include <bitset>
-using namespace std;
+#include <Arduino.h>
 
-const char LAYERS = 4;
+unsigned long atob(const char* pattern_string);
 
 class cubemap {
-  std::bitset<16> frame[LAYERS];
-
 public:
-  updateLayer(bitset& pattern)
-  {
-    frame[pattern[0]] = pattern.to_ulong & 0xFFFF;
-  }
+  static const char LAYERS = 4;
+  void updateLayer(const unsigned long pattern);
+  void inputLayer(const char* pattern);
+  unsigned int getLayer(const byte layer);
+  
+private:
+  unsigned long _frame[LAYERS];
+
 };
 
 
