@@ -3,6 +3,7 @@
 // Created 3.7.14
 // v0.1
 
+#include <cstdlib>
 #include "cubemem.h"
 
 const int dataPin = 10, latchPin = 11, clockPin = 12;
@@ -21,6 +22,17 @@ const int position_map[4][4] = {
     {16, 64, 4096, 16384},
     {8, 2, 2048, 512}
 };
+
+const char* test_pattern = "0010010100111011";
+
+int atob (const char* pattern_string, const byte length)
+{
+    unsigned long output_pattern = 0;
+    for (byte i = 0; i < length; i++)
+    {
+        output_pattern |= atoi(&pattern_string[i]) << length - 1;
+    }
+}
 
 void setup()
 {
