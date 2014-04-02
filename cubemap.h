@@ -1,19 +1,17 @@
-#ifndef CUBEMAP_H
-#define CUBEMAP_H
+//#include <Arduino.h>
+#include <bitset>
+using namespace std;
 
-#include <Arduino.h>
+const char LAYERS = 4;
 
-class cubemap
-{
+class cubemap {
+  std::bitset<16> frame[LAYERS];
 
 public:
-    static const byte LAYERS = 4;
-    void updateLayer(const unsigned long& pattern);
-
-private:
-    unsigned long frame[LAYERS];
-
+  updateLayer(bitset& pattern)
+  {
+    frame[pattern[0]] = pattern.to_ulong & 0xFFFF;
+  }
 };
 
 
-#endif
