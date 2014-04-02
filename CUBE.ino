@@ -5,12 +5,11 @@
 
 #include "cubemem.h"
 
-const byte LAYERS = 4;
-
 const int dataPin = 10, latchPin = 11, clockPin = 12;
 const int level[] = {7, 6, 5, 4};
 int pause = 1000;
 
+// EEPROM data structure with location start and number of pattern strings
 
 // This is a 2 demensional array that maps out all of the output locations to the correct output
 // address on the shift register based on the circuit wiring.
@@ -20,7 +19,7 @@ const int position_map[4][4] = {
     {32, 128, 8192, 32768},
     {4, 1, 1024, 256},
     {16, 64, 4096, 16384},
-    {8, 2, 2048, 512} 
+    {8, 2, 2048, 512}
 };
 
 void setup()
