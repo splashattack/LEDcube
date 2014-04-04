@@ -1,20 +1,24 @@
 #include "cubemap.h"
+#include <cstring>
 
 unsigned long atob(const char* pattern_string)
 {
-    const byte length = 17;
+    const byte length = strlen(pattern_string);
     unsigned long output_pattern = 0;
     for (byte i = 0; i < length; i++)
     {
-        output_pattern |= atol(&pattern_string[i]) << length - 1 - i;
+      char isolated[] = {pattern_string[i], '\0'};
+      output_pattern |= atol(isolated) << length - 1 - i;
     }
+    Serial.println(output_pattern, BIN);
     return output_pattern;
 }
 
 
 void cubemap::updateLayer(const unsigned long input_bits)
 {
-    byte select = (byte) (input_bits & 0xFFFF0000) >> 16;
+    unsigned long select = (input_bits & 0xFFFF0000) >> 16;
+    Serial.println(select);
     unsigned int pattern = input_bits & 0xFFFF;
     if (select == 0)
     {
