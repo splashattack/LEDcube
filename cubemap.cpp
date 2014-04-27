@@ -18,7 +18,6 @@ unsigned long atob(const char* pattern_string)
 void cubemap::updateLayer(const unsigned long input_bits)
 {
     unsigned long select = (input_bits & 0xFFFF0000) >> 16;
-    Serial.println(select);
     unsigned int pattern = input_bits & 0xFFFF;
     if (select == 0)
     {
